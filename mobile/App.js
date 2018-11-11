@@ -7,7 +7,17 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import { createStackNavigator } from 'react-navigation';
+import Index from './app/Index'
+import Contracts from './app/Contracts'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -17,15 +27,33 @@ const instructions = Platform.select({
 });
 
 type Props = {};
-export default class App extends Component<Props> {
+class WelcomeScreen extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <TouchableOpacity
+          // onPress={() => navigation}
+        >
+          <Text style={styles.instructions}>To get started, edit App.js</Text>
+        </TouchableOpacity>
       </View>
     );
+  }
+}
+
+const RootStack = createStackNavigator({
+  Index: {
+    screen: Index,
+  },
+  Contracts: {
+    screen: Contracts,
+  },
+});
+
+export default class App extends React.Component {
+  render() {
+    return <RootStack />;
   }
 }
 

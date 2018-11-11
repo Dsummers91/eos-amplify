@@ -13,6 +13,7 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-native": "0.56.1",
+    "react-navigation": "^2.18.2",
     "react-scripts": "^1.1.5",
     "text-encoding": "^0.7.0"
   },

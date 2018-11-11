@@ -2,25 +2,15 @@ import React, { Component } from 'react';
 import { Api, JsonRpc, RpcError } from 'eosjs'; // https://github.com/EOSIO/eosjs
 import { TextDecoder, TextEncoder } from 'text-encoding';
 import {
+  FlatList,
   Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-} from 'react-native';
+} from 'react-native'
 
 import JsSignatureProvider from '../eosjs-jssig'
-
-// material-ui dependencies
-import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
+import Contract from './Contract'
 
 // eosio endpoint
 const endpoint = "http://localhost:8888";
@@ -37,12 +27,22 @@ const accounts = [
   {"name":"useraaaaaaag", "privateKey":"5KFyaxQW8L6uXFB6wSgC44EsAbzC7ideyhhQ68tiYfdKQp69xKo", "publicKey":"EOS8Du668rSVDE3KkmhwKkmAyxdBd73B51FKE7SjkKe5YERBULMrw"}
 ];
 
-export default class Index extends Component {
+export default class Contracts extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      noteTable: [] // to store the table rows from smart contract
+      contractList: [{
+        id: 0,
+        title: 'example title 0',
+        description: 'example description 0',
+      }, {
+        id: 1,
+        title: 'example title 1',
+        description: 'example description 1',
+      }],
     };
+
+    // this.handleFormEvent = this.handleFormEvent.bind(this);
   }
 
   // generic function to handle form events (e.g. "submit" / "reset")
@@ -120,6 +120,27 @@ export default class Index extends Component {
     this.getTable();
   }
 
+  _onPressItem = (id: string) => {
+    // updater functions are preferred for transactional updates
+    this.setState((state) => {
+      // copy the map rather than modifying state.
+      const selected = new Map(state.selected);
+      selected.set(id, !selected.get(id)); // toggle
+      return {selected};
+    });
+  };
+
+  _renderItem = ({item}) => {
+    console.log(item)
+    return <Contract
+      id={item.id}
+      // onPressItem={this._onPressItem}
+      // selected={!!this.state.selected.get(item.id)}
+      title={item.title}
+      description={item.description}
+    />
+  }
+
   render() {
     const { noteTable } = this.state;
     const { classes } = this.props;
@@ -140,18 +161,23 @@ export default class Index extends Component {
         </CardContent>
       </Card>
     );
-    let noteCards = noteTable.map((row, i) =>
-      generateCard(i, row.timestamp, row.user, row.note));
 
     return(
       <View>
-        <Text>Welcome</Text>
-        <TouchableOpacity
-          onPress={() => {this.props.navigation.navigate('Contracts')}}
-        >
-          <Text>Please Sign In</Text>
-        </TouchableOpacity>
+        <Text>
+          List of available Contracts
+        </Text>
+
+        <FlatList
+          data={this.state.contractList}
+          extraData={this.state}
+          keyExtractor={(item, index) => index}
+          renderItem={(item) => this._renderItem(item)}
+        />
       </View>
     );
   }
+
 }
+
+// export default withStyles(styles)(Index);
