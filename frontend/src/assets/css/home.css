@@ -1,8 +1,8 @@
 .containter {
-    height: 100vh;
+    height: 54em;
     background: #2e2e2e;
     text-align: center;
-    /* background-color: #33cccc; */
+    font-family: 'Orbitron', sans-serif;
 }
 
 .splash-img {
